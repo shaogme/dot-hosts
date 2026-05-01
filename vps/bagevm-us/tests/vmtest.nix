@@ -10,7 +10,7 @@ pkgs.testers.nixosTest {
     base.hardware.network.single-interface.enable = lib.mkForce false;
     
     # 2. 调试增强：允许通过密码登录，方便使用 driver 手动调试
-    base.auth.root.mode = "permit_passwd";
+    base.auth.root.mode = lib.mkForce "permit_passwd";
     users.users.root.password = "test";
 
     # 3. 性能优化：在虚拟机中禁用耗时的磁盘操作（可选）
