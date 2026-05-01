@@ -3,7 +3,7 @@
 pkgs.testers.nixosTest {
   name = "bagevm-us-vm-test";
   
-  nodes.machine = { config, lib, ... }: {
+  nodes.server = { config, lib, ... }: {
     imports = [ ../configuration.nix ];
 
     # 1. 环境适配：禁用生产环境特有的网络接口配置，改用 VM 默认网络
@@ -19,21 +19,21 @@ pkgs.testers.nixosTest {
 
   testScript = ''
     # 等待系统启动完成
-    machine.wait_for_unit("multi-user.target")
+    server.wait_for_unit("multi-user.target")
     
     # 验证核心服务：Podman
-    machine.wait_for_unit("podman.socket")
+    server.wait_for_unit("podman.socket")
     
     # 验证 Web 服务器：Nginx
-    machine.wait_for_unit("nginx.service")
-    machine.wait_for_open_port(80)
+    server.wait_for_unit("nginx.service")
+    server.wait_for_open_port(80)
     
     # 验证内核调优：检查 BBR 是否启用 (CachyOS 默认启用)
-    sysctl_bbr = machine.succeed("sysctl net.ipv4.tcp_congestion_control")
+    sysctl_bbr = server.succeed("sysctl net.ipv4.tcp_congestion_control")
     assert "bbr" in sysctl_bbr
     
     # 验证主机名
-    hostname = machine.succeed("hostname").strip()
+    hostname = server.succeed("hostname").strip()
     assert hostname == "bagevm-us"
     
     print("VM 测试全部通过！")
