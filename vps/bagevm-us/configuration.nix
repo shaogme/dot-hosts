@@ -21,9 +21,9 @@ let
     };
 
     ipv4 = {
-      address = "148.135.184.91";
+      address = "199.241.33.156";
       prefixLength = 24;
-      gateway = "148.135.184.1";
+      gateway = "199.241.33.1";
     };
     ipv6 = {
       address = "2602:f988:90:e55::9e5";
