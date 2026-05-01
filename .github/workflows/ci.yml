@@ -8,6 +8,12 @@ on:
       - 'README.md'
       - 'docs/*'
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - 'docs/*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
