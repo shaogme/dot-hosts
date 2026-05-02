@@ -81,7 +81,7 @@ in
           url = "https://github.com/shaogme/dot-hosts";
       };
       # 指定追踪 dot-hosts 仓库中的子路径
-      path = hostConfig.name; 
+      path = "vps/${hostConfig.name}"; 
   };
 
   # ==========================================
