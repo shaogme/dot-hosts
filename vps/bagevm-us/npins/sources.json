@@ -29,8 +29,8 @@
     "nixpkgs": {
       "type": "Channel",
       "name": "nixos-unstable-small",
-      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.05pre990138.417335fe0407/nixexprs.tar.xz",
-      "hash": "sha256-R6MKicYqlPE26qBEmGI2MVRN2MvZGZCsJkOdMW43k4o="
+      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.05pre990408.8b90d0d58fd7/nixexprs.tar.xz",
+      "hash": "sha256-VL/iHzvN6Q7PqPQJhyVjH/bvnUZ1DUlU9bXEvBm8wxQ="
     }
   },
   "version": 7
