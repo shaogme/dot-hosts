@@ -2,7 +2,7 @@ name: Auto Update npins
 
 on:
   schedule:
-    - cron: '0 20 * * *' # 04:00 Beijing Time (UTC+8)
+    - cron: '30 19 * * *' # 03:30 Beijing Time (UTC+8)
   workflow_dispatch: # Allow manual trigger
 
 permissions:
