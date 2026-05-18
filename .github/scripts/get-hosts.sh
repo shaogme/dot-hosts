@@ -13,8 +13,8 @@ hosts=()
 
 # Iterate over directories in vps/
 for dir in vps/*/; do
-    # 检查基础要求：是否存在 configuration.nix 且存在 tests/run-tests.sh
-    if [ -d "$dir" ] && [ -f "$dir/configuration.nix" ] && [ -f "$dir/tests/run-tests.sh" ]; then
+    # 检查基础要求：是否存在 configuration.nix
+    if [ -d "$dir" ] && [ -f "$dir/configuration.nix" ]; then
         
         # 如果启用了 npins 过滤，则额外检查 npins 文件
         if [ "$FILTER_NPINS" = true ]; then

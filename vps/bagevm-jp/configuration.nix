@@ -188,7 +188,7 @@ in
   assertions = [
     {
       assertion = config.networking.hostName == hostConfig.name;
-      message = "主机名配置错误，预期为 bagevm-us，实际为 ${config.networking.hostName}";
+      message = "主机名配置错误，预期为 ${hostConfig.name}，实际为 ${config.networking.hostName}";
     }
     {
       assertion = config.base.update.upgrade.type == "legacy";

@@ -62,7 +62,7 @@ jobs:
       - name: Run VPS Tests (${{ matrix.host }})
         run: |
           echo "Running tests for host: ${{ matrix.host }}"
-          bash vps/${{ matrix.host }}/tests/run-tests.sh
+          bash tests/run.sh ${{ matrix.host }}
 
   ci-success:
     needs: 
