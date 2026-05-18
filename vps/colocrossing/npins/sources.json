@@ -1,0 +1,37 @@
+{
+  "pins": {
+    "dot-base": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "shaogme",
+        "repo": "dot-base"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "c42a1f903ce6c868de6bebc3e173d744df6dbe3e",
+      "url": "https://github.com/shaogme/dot-base/archive/c42a1f903ce6c868de6bebc3e173d744df6dbe3e.tar.gz",
+      "hash": "sha256-vF+MFLd+S521d9zs7utNYjIFJY9TdxEWYPyLuZ+pPa4="
+    },
+    "dot-exts": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "shaogme",
+        "repo": "dot-exts"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "35e9e2cbf0661151dc9d51b3affb89ca236786be",
+      "url": "https://github.com/shaogme/dot-exts/archive/35e9e2cbf0661151dc9d51b3affb89ca236786be.tar.gz",
+      "hash": "sha256-VihYSM3L0yF9BXXVZEiwqJoyi9+9QoQm2TgxMnimdzs="
+    },
+    "nixpkgs": {
+      "type": "Channel",
+      "name": "nixos-unstable-small",
+      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.05pre998996.5a51fe22e18a/nixexprs.tar.xz",
+      "hash": "sha256-/dM6gIpwN+FEAi9Ewu/HxUMuEqpnVeyrfWOsQGSJGlk="
+    }
+  },
+  "version": 7
+}

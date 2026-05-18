@@ -10,27 +10,22 @@ let
 
   # 主机基础配置信息
   hostConfig = {
-    name = "bagevm-us";
+    name = "colocrossing";
     domainRoot = "shaog.me";
     email = "hi@shaog.me";
     diskDevice = "/dev/vda";
 
     auth = {
-      # Hash 密码
-      rootHash = "$6$XWNH63WaC867Ahyx$0EqTPRa9MJtY760kLYhL30VXUinaTlpSYoe0OsJixKwnFq7C9PjBJ8KKWky09vSNc5gLcQQ1iJdIJUmyGYs0y/";
-      # SSH 公钥
-      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKylBbHVCLpH3z2clvyWRWs0km2eXndeKfef1wtqZ+k6 ed25519 256-20251223 shaog@duck.com" ];
+      # 你的 Hash 密码
+      rootHash = "$6$3A8ll87D81WnfND6$ghKF8iC69Vaar18Ete3Lff/G7modGVIIOzG/3guljMOoKjGkZherCoBZB1np7hXj0MiQjSXF62Pk55Qm5i.pV/";
+      # SSH Keys
+      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUX87zC0TYwENrTpb6HJCbbgGQzayw88EUz5eSgjzFf ed25519 256-20260113 shaog@duck.com" ];
     };
 
     ipv4 = {
-      address = "199.241.33.156";
-      prefixLength = 24;
-      gateway = "199.241.33.1";
-    };
-    ipv6 = {
-      address = "2602:f988:90:e55::9e5";
-      prefixLength = 64;
-      gateway = "2602:f988:90::1";
+      address = "23.94.213.198";
+      prefixLength = 25;
+      gateway = "23.94.213.129";
     };
   };
 in

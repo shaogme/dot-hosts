@@ -10,27 +10,27 @@ let
 
   # 主机基础配置信息
   hostConfig = {
-    name = "bagevm-us";
+    name = "cloudcone";
     domainRoot = "shaog.me";
     email = "hi@shaog.me";
     diskDevice = "/dev/vda";
 
     auth = {
-      # Hash 密码
-      rootHash = "$6$XWNH63WaC867Ahyx$0EqTPRa9MJtY760kLYhL30VXUinaTlpSYoe0OsJixKwnFq7C9PjBJ8KKWky09vSNc5gLcQQ1iJdIJUmyGYs0y/";
-      # SSH 公钥
-      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKylBbHVCLpH3z2clvyWRWs0km2eXndeKfef1wtqZ+k6 ed25519 256-20251223 shaog@duck.com" ];
+      # 你的 Hash 密码
+      rootHash = "$6$n1p6xsnD2xDbJbBg$WJ6wW2nwsi9UUSjTzN.oQVTWV9M05Qk3OGV2zjUXeembpUog.w3E5.uzu4XEoqtWVciRbz8UulJOo/jNwi6yY.";
+      # SSH Keys
+      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGt4r+vxF5l4riWc9qqNmGG8qAeqxXXA6DaD+MWj14bZ ed25519 256-20251224 shaog@duck.com" ];
     };
 
     ipv4 = {
-      address = "199.241.33.156";
-      prefixLength = 24;
-      gateway = "199.241.33.1";
+      address = "142.171.173.245";
+      prefixLength = 26;
+      gateway = "142.171.173.193";
     };
     ipv6 = {
-      address = "2602:f988:90:e55::9e5";
+      address = "2607:f130:0:161::3c23:5d0d";
       prefixLength = 64;
-      gateway = "2602:f988:90::1";
+      gateway = "2607:f130:0:161::1";
     };
   };
 in
