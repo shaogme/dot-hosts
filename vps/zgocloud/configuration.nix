@@ -10,27 +10,22 @@ let
 
   # 主机基础配置信息
   hostConfig = {
-    name = "cloudcone";
+    name = "zgocloud";
     domainRoot = "shaog.me";
     email = "hi@shaog.me";
-    diskDevice = "/dev/vda";
+    diskDevice = "/dev/sda";
 
     auth = {
       # 你的 Hash 密码
-      rootHash = "$6$n1p6xsnD2xDbJbBg$WJ6wW2nwsi9UUSjTzN.oQVTWV9M05Qk3OGV2zjUXeembpUog.w3E5.uzu4XEoqtWVciRbz8UulJOo/jNwi6yY.";
+      rootHash = "$6$3A8ll87D81WnfND6$ghKF8iC69Vaar18Ete3Lff/G7modGVIIOzG/3guljMOoKjGkZherCoBZB1np7hXj0MiQjSXF62Pk55Qm5i.pV/";
       # SSH Keys
-      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGt4r+vxF5l4riWc9qqNmGG8qAeqxXXA6DaD+MWj14bZ ed25519 256-20251224 hi@shaog.me" ];
+      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUX87zC0TYwENrTpb6HJCbbgGQzayw88EUz5eSgjzFf ed25519 256-20260113 hi@shaog.me" ];
     };
 
     ipv4 = {
-      address = "142.171.173.245";
-      prefixLength = 26;
-      gateway = "142.171.173.193";
-    };
-    ipv6 = {
-      address = "2607:f130:0:161::3c23:5d0d";
-      prefixLength = 64;
-      gateway = "2607:f130:0:161::1";
+      address = "38.49.57.114";
+      prefixLength = 24;
+      gateway = "38.49.57.1";
     };
   };
 in

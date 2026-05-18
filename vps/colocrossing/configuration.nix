@@ -19,7 +19,7 @@ let
       # 你的 Hash 密码
       rootHash = "$6$3A8ll87D81WnfND6$ghKF8iC69Vaar18Ete3Lff/G7modGVIIOzG/3guljMOoKjGkZherCoBZB1np7hXj0MiQjSXF62Pk55Qm5i.pV/";
       # SSH Keys
-      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUX87zC0TYwENrTpb6HJCbbgGQzayw88EUz5eSgjzFf ed25519 256-20260113 shaog@duck.com" ];
+      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUX87zC0TYwENrTpb6HJCbbgGQzayw88EUz5eSgjzFf ed25519 256-20260113 hi@shaog.me" ];
     };
 
     ipv4 = {

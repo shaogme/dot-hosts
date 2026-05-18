@@ -1,11 +1,12 @@
 let
-  # 定义项目中所有的 VPS 名称
-  vpsList = [
-    "bagevm-jp"
-    "bagevm-us"
-    "cloudcone"
-    "colocrossing"
-  ];
+  # 动态获取 vps/ 目录下的所有含有 configuration.nix 的主机名称
+  vpsList = builtins.filter (
+    name:
+    let
+      type = (builtins.readDir ../vps).${name};
+    in
+    type == "directory" && builtins.pathExists (../vps + "/${name}/configuration.nix")
+  ) (builtins.attrNames (builtins.readDir ../vps));
 
   # 为单个 VPS 生成静态和运行时测试的辅助函数
   makeVpsTests = name:
