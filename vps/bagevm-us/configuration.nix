@@ -12,6 +12,8 @@ let
   hostConfig = {
     name = "bagevm-us";
     domainRoot = "shaog.me";
+    email = "hi@shaog.me";
+    diskDevice = "/dev/vda";
 
     auth = {
       # Hash 密码
@@ -52,7 +54,7 @@ in
   base.hardware.type = "vps";
   exts.hardware.disk.btrfs = {
       enable = true;
-      device = "/dev/vda";
+      device = hostConfig.diskDevice;
       swapSize = 2048;
       # 显式指定基础镜像大小（MB），用于 Disko 构建参考
       imageBaseSize = 2048; 
@@ -93,7 +95,7 @@ in
   hardware.facter.reportPath = ./facter.json;
 
   # Nginx/ACME 证书联系邮箱 (强制要求)
-  base.app.web.nginx.email = "hi@shaog.me";
+  base.app.web.nginx.email = hostConfig.email;
 
   # 1. Web 应用: OpenList (原 alist)
   base.app.web.openlist = {
@@ -110,6 +112,7 @@ in
   };
   
   # 3. Web 应用: X-UI-YG
+  # cat /var/lib/x-ui-yg/init.log 获取账号密码
   base.app.web.x-ui-yg = {
       enable = true;
       domain = "x-ui.${hostConfig.name}.${hostConfig.domainRoot}";
@@ -122,6 +125,7 @@ in
   };
   
   # 4. 代理服务: Hysteria
+  # cat /run/hysteria/main/config.yaml 获取 auth 密码
   base.app.hysteria = {
     enable = true;
     backend = "podman";
@@ -179,7 +183,7 @@ in
   # 静态测试与合法性断言 (与配置同模块维护)
   assertions = [
     {
-      assertion = config.networking.hostName == "bagevm-us";
+      assertion = config.networking.hostName == hostConfig.name;
       message = "主机名配置错误，预期为 bagevm-us，实际为 ${config.networking.hostName}";
     }
     {
@@ -187,7 +191,7 @@ in
       message = "更新模式配置错误，预期为 legacy，实际为 ${config.base.update.upgrade.type}";
     }
     {
-      assertion = config.base.app.web.nginx.email == "hi@shaog.me";
+      assertion = config.base.app.web.nginx.email == hostConfig.email;
       message = "ACME 邮箱配置错误，当前为 ${config.base.app.web.nginx.email}";
     }
     {
