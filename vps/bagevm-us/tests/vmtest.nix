@@ -21,31 +21,37 @@ pkgs.testers.nixosTest {
     # exts.hardware.disk.btrfs.enable = lib.mkForce false;
   };
 
-  testScript = ''
-    # 等待系统启动完成
-    server.wait_for_unit("multi-user.target")
-    
-    # 验证核心服务：Podman 不应启动
-    server.fail("systemctl is-active podman.service")
-    server.fail("systemctl is-active podman.socket")
-    
-    # 验证 Web 服务器：Nginx 应正常启动并监听 80 端口
-    server.wait_for_unit("nginx.service")
-    server.wait_for_open_port(80)
+  testScript = { nodes, ... }:
+    let
+      serverCfg = nodes.server.config;
+      hostName = serverCfg.networking.hostName;
+      alistDomain = serverCfg.base.app.web.openlist.domain;
+    in
+    ''
+      # 等待系统启动完成
+      server.wait_for_unit("multi-user.target")
+      
+      # 验证核心服务：Podman 不应启动
+      server.fail("systemctl is-active podman.service")
+      server.fail("systemctl is-active podman.socket")
+      
+      # 验证 Web 服务器：Nginx 应正常启动并监听 80 端口
+      server.wait_for_unit("nginx.service")
+      server.wait_for_open_port(80)
 
-    # 验证站点配置已加载（虽然返回 502，但说明 Nginx 正在处理该域名）
-    # 使用 -k 是因为虽然是 HTTP，但 curl 可能会尝试升级或类似操作，保持简单
-    # 我们预期返回 502 Bad Gateway，因为 Podman 没启动，后端不可达
-    server.succeed("curl -v -H 'Host: alist.bagevm-us.shaog.me' http://127.0.0.1 | grep '502 Bad Gateway'")
-    
-    # 验证内核调优：检查 BBR 是否启用 (CachyOS 默认启用)
-    sysctl_bbr = server.succeed("sysctl net.ipv4.tcp_congestion_control")
-    assert "bbr" in sysctl_bbr
-    
-    # 验证主机名
-    hostname = server.succeed("hostname").strip()
-    assert hostname == "bagevm-us"
-    
-    print("VM 测试全部通过！")
-  '';
+      # 验证站点配置已加载（虽然返回 502，但说明 Nginx 正在处理该域名）
+      # 使用 -k 是因为虽然是 HTTP，但 curl 可能会尝试升级或类似操作，保持简单
+      # 我们预期返回 502 Bad Gateway，因为 Podman 没启动，后端不可达
+      server.succeed("curl -v -H 'Host: ${alistDomain}' http://127.0.0.1 | grep '502 Bad Gateway'")
+      
+      # 验证内核调优：检查 BBR 是否启用 (CachyOS 默认启用)
+      sysctl_bbr = server.succeed("sysctl net.ipv4.tcp_congestion_control")
+      assert "bbr" in sysctl_bbr
+      
+      # 验证主机名
+      hostname = server.succeed("hostname").strip()
+      assert hostname == "${hostName}"
+      
+      print("VM 测试全部通过！")
+    '';
 }
