@@ -175,4 +175,25 @@ in
       initialHashedPassword = hostConfig.auth.rootHash;
       authorizedKeys = hostConfig.auth.sshKeys;
   };
+
+  # 静态测试与合法性断言 (与配置同模块维护)
+  assertions = [
+    {
+      assertion = config.networking.hostName == "bagevm-us";
+      message = "主机名配置错误，预期为 bagevm-us，实际为 ${config.networking.hostName}";
+    }
+    {
+      assertion = config.base.update.upgrade.type == "legacy";
+      message = "更新模式配置错误，预期为 legacy，实际为 ${config.base.update.upgrade.type}";
+    }
+    {
+      assertion = config.base.app.web.nginx.email == "hi@shaog.me";
+      message = "ACME 邮箱配置错误，当前为 ${config.base.app.web.nginx.email}";
+    }
+    {
+      assertion = config.exts.kernel.cachyos.enable == true;
+      message = "内核配置错误：CachyOS 内核未启用";
+    }
+  ];
 }
+

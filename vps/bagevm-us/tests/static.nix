@@ -14,6 +14,17 @@ let
   };
   
   cfg = eval.config;
+
+  # 只过滤出失败的断言，避免评估已通过断言的 message 导致惰性求值报错
+  failedAssertions = pkgs.lib.filter (x: !x.assertion) cfg.assertions;
+
+  # 将失败的断言转换为 Bash 报错语句
+  generateFailure = index: assertionObj: ''
+    echo "错误: 静态断言未通过 - ${assertionObj.message}"
+  '';
+
+  failuresBash = pkgs.lib.concatStringsSep "\n" (pkgs.lib.imap0 generateFailure failedAssertions);
+  failedCount = builtins.length failedAssertions;
 in
 pkgs.runCommand "bagevm-us-static-check" {
   # 增加元数据输出，方便调试
@@ -21,30 +32,15 @@ pkgs.runCommand "bagevm-us-static-check" {
 } ''
   echo "--- 正在执行静态检查 ---"
 
-  echo "检查主机名..."
-  if [[ "${cfg.networking.hostName}" != "bagevm-us" ]]; then
-    echo "错误: 主机名预期为 bagevm-us，实际为 ${cfg.networking.hostName}"
+  ${if failedCount > 0 then ''
+    ${failuresBash}
     exit 1
-  fi
-
-  echo "检查更新模式 (legacy)..."
-  if [[ "${cfg.base.update.upgrade.type}" != "legacy" ]]; then
-    echo "错误: 更新模式预期为 legacy，实际为 ${cfg.base.update.upgrade.type}"
-    exit 1
-  fi
-
-  echo "检查 Nginx 邮箱..."
-  if [[ "${cfg.base.app.web.nginx.email}" != "hi@shaog.me" ]]; then
-    echo "错误: 邮箱配置不匹配"
-    exit 1
-  fi
-
-  echo "检查 CachyOS 内核是否启用..."
-  if [[ "${builtins.toString cfg.exts.kernel.cachyos.enable}" != "1" ]]; then
-    echo "错误: CachyOS 内核未启用"
-    exit 1
-  fi
+  '' else ''
+    echo "所有静态断言检查通过！"
+  ''}
 
   echo "静态检查通过！"
   touch $out
 ''
+
+
