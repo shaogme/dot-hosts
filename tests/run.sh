@@ -6,11 +6,19 @@ set -e
 CACHE_Substituters="https://cache.nixos.org https://attic.xuyh0120.win/lantian https://cache.garnix.io"
 CACHE_TrustedPublicKeys="cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
 
-# 获取脚本所在目录
-TESTS_DIR="$(dirname "$0")"
+# 获取脚本所在目录及仓库根目录
+TESTS_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_DIR="$(cd "$TESTS_DIR/.." && pwd)"
 
-# 支持的 VPS 列表
-VPS_LIST=("bagevm-jp" "bagevm-us" "cloudcone" "colocrossing")
+# 自动检测支持的 VPS 列表
+VPS_LIST=()
+for dir in "$REPO_DIR"/vps/*/; do
+  # 检查基础要求：是否存在 configuration.nix
+  if [ -d "$dir" ] && [ -f "$dir/configuration.nix" ]; then
+    vps_name=$(basename "$dir")
+    VPS_LIST+=("$vps_name")
+  fi
+done
 
 print_help() {
   echo "统一 VPS 测试工具"
