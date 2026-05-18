@@ -22,9 +22,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "35e9e2cbf0661151dc9d51b3affb89ca236786be",
-      "url": "https://github.com/shaogme/dot-exts/archive/35e9e2cbf0661151dc9d51b3affb89ca236786be.tar.gz",
-      "hash": "sha256-VihYSM3L0yF9BXXVZEiwqJoyi9+9QoQm2TgxMnimdzs="
+      "revision": "83768ed98b11eede8c07ac7de65c805402388e08",
+      "url": "https://github.com/shaogme/dot-exts/archive/83768ed98b11eede8c07ac7de65c805402388e08.tar.gz",
+      "hash": "sha256-2gTBG6HJ6clG5EPyyxW9z6DjS70FlEp7S1thDCp3Y1E="
     },
     "nixpkgs": {
       "type": "Channel",
