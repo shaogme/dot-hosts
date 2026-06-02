@@ -22,16 +22,16 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "bdb38ab45428c54a51b227b12b6be89c1d4cb6d6",
-      "url": "https://github.com/shaogme/dot-exts/archive/bdb38ab45428c54a51b227b12b6be89c1d4cb6d6.tar.gz",
-      "hash": "sha256-aD86lkgM2bOKUHMEYuZY/cH1cIxypnZ1lKKeL+8cWsA="
+      "revision": "75253263c6248e445a32eea7ba9791ec8bf3dc67",
+      "url": "https://github.com/shaogme/dot-exts/archive/75253263c6248e445a32eea7ba9791ec8bf3dc67.tar.gz",
+      "hash": "sha256-/lPuJmd3oAGME72NTC8ivBdSHYLTBKEhw7tJMFRzZ24="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixos-unstable-small",
       "artifact": "nixexprs.tar.xz",
-      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1008796.228ae3b72880/nixexprs.tar.xz",
-      "hash": "sha256-7FI/zSWzWUYcGhV/FhP6iV/jQVvGy2XNO3TyFcVD6t4="
+      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1009235.9ad99deda7c3/nixexprs.tar.xz",
+      "hash": "sha256-HwqjosW/NX4EfQAc6x5cZ8bNfAlf8/gGYKxS5MUL1IE="
     }
   },
   "version": 8
