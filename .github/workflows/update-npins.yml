@@ -37,6 +37,7 @@ jobs:
             echo "Updating npins for host: $host"
             cd "vps/$host"
             # Using nixpkgs from the nix-command to get npins
+            nix shell nixpkgs#npins -c npins upgrade
             nix shell nixpkgs#npins -c npins update
             cd - > /dev/null
           done
