@@ -48,7 +48,7 @@ in
   system.stateVersion = "25.11"; 
   
   # 启用 Lix 代替默认的 CppNix
-  nix.package = pkgs.lixPackageSets.stable.lix;
+  nix.package = pkgs.lixPackageSets.git.lix;
 
   # 基础功能启用
   base.enable = true;
