@@ -45,7 +45,7 @@ hostConfig = {
 ```
 
 > [!WARNING]
-> **请务必不要直接使用默认 of rootHash**！
+> **请务必不要直接使用默认的`rootHash`**！
 > 为了系统安全，请务必在本地运行以下命令生成您独有的 SHA-512 散列密码并填入 `rootHash`：
 > ```bash
 > nix run nixpkgs#mkpasswd -- -m sha-512
