@@ -172,3 +172,45 @@ sudo nixos-rebuild switch \
   -I nixos-config=/etc/nixos/vps/$(hostname)/configuration.nix \
   -I nixpkgs=$(nix-instantiate --eval -E "toString (import /etc/nixos/vps/$(hostname)/npins).nixpkgs" | tr -d '"')
 ```
+
+---
+
+## 独立 Nginx 服务配置指引 (使用独立 Nix 配置文件)
+
+如果您需要运行一个标准 Nginx 服务且不想修改主机的 `configuration.nix` 配置文件，可以利用我们启用的独立配置文件机制。系统会自动扫描并加载 `/etc/nixos-extra/services/` 目录下的所有以 `.nix` 结尾的配置文件。通过编写独立的 Nix 配置文件，即可在其中**同时**声明 ACME 证书与 Nginx 虚拟主机，系统会自动处理 SSL 证书签发、80 到 443 强制跳转以及服务反向代理。
+
+### 1. 编写独立 Nix 配置文件
+直接在 VPS 上的 `/etc/nixos-extra/services/` 目录下创建一个新的 `.nix` 文件（例如 `/etc/nixos-extra/services/my-service.nix`）：
+
+```nix
+{ config, ... }:
+
+{
+  # 1. 声明 ACME 证书
+  security.acme.certs."yourdomain.com" = {
+    webroot = "/var/lib/acme/acme-challenge";
+    email = config.base.app.web.nginx.email; # 自动使用当前主机配置的邮箱
+  };
+
+  # 2. 声明 Nginx 虚拟主机
+  services.nginx.virtualHosts."yourdomain.com" = {
+    # 启用 ACME 证书绑定
+    useACMEHost = "yourdomain.com";
+    forceSSL = true; # 自动重定向 HTTP 80 到 HTTPS 443
+
+    # 反代配置
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:8080"; # 您的实际后端服务端口
+    };
+  };
+}
+```
+
+### 2. 应用并生效配置
+在 VPS 上执行系统配置重构，NixOS 会自动识别新文件，完成 ACME 域名验证并签发 SSL 证书，随后自动载入并重载 Nginx 服务：
+
+```bash
+sudo nixos-rebuild switch \
+  -I nixos-config=/etc/nixos/vps/$(hostname)/configuration.nix \
+  -I nixpkgs=$(nix-instantiate --eval -E "toString (import /etc/nixos/vps/$(hostname)/npins).nixpkgs" | tr -d '"')
+```

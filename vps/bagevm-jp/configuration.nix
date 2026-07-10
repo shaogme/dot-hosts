@@ -40,6 +40,7 @@ in
     dot-base.nixosModules.default
     dot-exts.nixosModules.kernel.cachyos
     dot-exts.nixosModules.hardware.disk.btrfs
+    ../common.nix
   ];
 
   # ==========================================
