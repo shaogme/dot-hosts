@@ -99,6 +99,31 @@ exts.hardware.disk.btrfs = {
 
 ---
 
+### 5. 硬件信息采集与 `facter.json` 生成
+
+本仓库支持通过 `nixos-facter` 自动采集硬件元数据（包含 CPU 架构、网卡拓扑、磁盘布局、BIOS/UEFI 等），供系统的硬件模块识别。
+
+> [!NOTE]
+> 如果目标主机运行的是非 NixOS 系统（如 Ubuntu/Debian/CentOS 等），且尚未安装 Nix 包管理器，可以运行官方推荐的脚本一键安装 Nix（Multi-user 模式）：
+> ```bash
+> curl --proto '=https' --tlsv1.2 -sSf -L https://nixos.org/nix/install | sh -s -- --daemon
+> ```
+> 安装完成后执行 `source /etc/profile.d/nix.sh`（或重新登录终端）即可直接使用 `nix` 命令。
+
+在目标主机或虚拟机上运行以下命令采集并导出硬件清单文件：
+
+```bash
+nix run github:nixos-facter -- -o facter.json
+```
+
+将导出的 `facter.json` 放置于主机配置根目录（如 `hyper-v/coding/facter.json`），并在该主机的 `configuration.nix` 中指定引用路径：
+
+```nix
+hardware.facter.reportPath = ./facter.json;
+```
+
+---
+
 ## 依赖管理与升级 (npins)
 
 根据项目开发规范，本仓库外部依赖（非 Flake 项目）统一由 **npins** 托管。禁止手动编写 `fetchFromGitHub`、`fetchTarball` 等，以确保哈希的版本可锁和绝对可追溯。

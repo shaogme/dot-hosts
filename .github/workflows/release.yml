@@ -13,8 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CACHIX_SUBSTITUTERS: https://cache.nixos.org https://attic.xuyh0120.win/lantian https://cache.garnix.io
-  CACHIX_PUBLIC_KEYS: cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+  CACHIX_SUBSTITUTERS: https://cache.nixos.org https://attic.xuyh0120.win/lantian
+  CACHIX_PUBLIC_KEYS: cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=
 
 jobs:
   setup-hosts:
@@ -57,21 +57,24 @@ jobs:
 
       - name: Build Disko Images
         run: |
-          nix-build "vps/${{ matrix.host }}" \
+          nix-build "${{ matrix.host }}" \
             --option substituters "${{ env.CACHIX_SUBSTITUTERS }}" \
             --option trusted-public-keys "${{ env.CACHIX_PUBLIC_KEYS }}" \
             -o result
 
       - name: Prepare and Compress Image
+        id: prep
         run: |
-          cp result/*.raw ${{ matrix.host }}.raw
-          tar -I "zstd -19 -T0" -cf ${{ matrix.host }}.tar.zst ${{ matrix.host }}.raw
+          HOST_NAME=$(basename "${{ matrix.host }}")
+          echo "host_name=${HOST_NAME}" >> $GITHUB_OUTPUT
+          cp result/*.raw ${HOST_NAME}.raw
+          tar -I "zstd -19 -T0" -cf ${HOST_NAME}.tar.zst ${HOST_NAME}.raw
 
       - name: Upload Artifact
         uses: actions/upload-artifact@main
         with:
-          name: image-${{ matrix.host }}
-          path: ${{ matrix.host }}.tar.zst
+          name: image-${{ steps.prep.outputs.host_name }}
+          path: ${{ steps.prep.outputs.host_name }}.tar.zst
           if-no-files-found: error
 
   upload:

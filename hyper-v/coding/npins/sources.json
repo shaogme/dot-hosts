@@ -1,0 +1,51 @@
+{
+  "pins": {
+    "dot-base": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "shaogme",
+        "repo": "dot-base"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "c71b0ebe8bace79e8345dffac6b3d86abcdd7002",
+      "url": "https://github.com/shaogme/dot-base/archive/c71b0ebe8bace79e8345dffac6b3d86abcdd7002.tar.gz",
+      "hash": "sha256-/UheMIGJbOnrubG5JAQi6r0up6QicwZk0kdmrhsC4Ho="
+    },
+    "dot-exts": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "shaogme",
+        "repo": "dot-exts"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "f9410f0d01bf95ea8d91956ea93d1ddd17629092",
+      "url": "https://github.com/shaogme/dot-exts/archive/f9410f0d01bf95ea8d91956ea93d1ddd17629092.tar.gz",
+      "hash": "sha256-7liADk6YpEGyF9rjM+tzjSk9mbNviUR8i4H3tikjqeo="
+    },
+    "nixpkgs": {
+      "type": "Channel",
+      "name": "nixos-unstable-small",
+      "artifact": "nixexprs.tar.xz",
+      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1049052.506ac128b116/nixexprs.tar.xz",
+      "hash": "sha256-W8nZMyanhBYDMoIOadUsJIXNEmoT2GCPJx35ZArx0Ao="
+    },
+    "rust-overlay": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "oxalica",
+        "repo": "rust-overlay"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "57a23bfaf4f7017267294b161175db1e32eb1c85",
+      "url": "https://github.com/oxalica/rust-overlay/archive/57a23bfaf4f7017267294b161175db1e32eb1c85.tar.gz",
+      "hash": "sha256-jfR6OhwurCKn1tREyfOcK/Omxf1Q/DzDDFbnEr1mBLs="
+    }
+  },
+  "version": 8
+}
