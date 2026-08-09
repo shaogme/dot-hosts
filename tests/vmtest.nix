@@ -11,6 +11,7 @@ pkgs.testers.nixosTest {
     
     # 2. 调试增强：允许通过密码登录，方便使用 driver 手动调试
     base.auth.root.mode = lib.mkForce "permit_passwd";
+    users.users.root.initialHashedPassword = lib.mkForce null;
     users.users.root.password = "test";
 
     # 3. 启用测试模式
@@ -23,8 +24,9 @@ pkgs.testers.nixosTest {
 
   testScript = { nodes, ... }:
     let
-      serverCfg = nodes.server.config;
+      serverCfg = nodes.server;
       hostName = serverCfg.networking.hostName;
+      hasNginx = serverCfg.services.nginx.enable or false;
       hasOpenlist = serverCfg.base.app.web.openlist.enable or false;
       alistDomain = if hasOpenlist then serverCfg.base.app.web.openlist.domain else "";
     in
@@ -36,9 +38,10 @@ pkgs.testers.nixosTest {
       server.fail("systemctl is-active podman.service")
       server.fail("systemctl is-active podman.socket")
       
-      # 验证 Web 服务器：Nginx 应正常启动并监听 80 端口
-      server.wait_for_unit("nginx.service")
-      server.wait_for_open_port(80)
+      # 验证 Web 服务器（如果启用）
+      if ${if hasNginx then "True" else "False"}:
+          server.wait_for_unit("nginx.service")
+          server.wait_for_open_port(80)
 
       # 验证站点配置已加载（虽然返回 502，但说明 Nginx 正在处理该域名）
       # 使用 -k 是因为虽然是 HTTP，但 curl 可能会尝试升级或类似操作，保持简单

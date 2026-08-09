@@ -29,7 +29,7 @@ jobs:
       - id: set-hosts
         run: echo "hosts=$(bash .github/scripts/get-hosts.sh)" >> $GITHUB_OUTPUT
 
-  vps-tests:
+  host-tests:
     runs-on: ubuntu-latest
     needs: setup-hosts
     if: needs.setup-hosts.outputs.hosts != '[]'
@@ -49,8 +49,8 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             system-features = kvm big-parallel nixos-test
-            substituters = https://cache.nixos.org https://attic.xuyh0120.win/lantian https://cache.garnix.io
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+            substituters = https://cache.nixos.org https://attic.xuyh0120.win/lantian
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=
 
       - name: Enable KVM group perms
         run: |
@@ -59,14 +59,14 @@ jobs:
           sudo udevadm trigger --name-match=kvm
           ls -la /dev/kvm
 
-      - name: Run VPS Tests (${{ matrix.host }})
+      - name: Run Host Tests (${{ matrix.host }})
         run: |
           echo "Running tests for host: ${{ matrix.host }}"
-          bash tests/run.sh ${{ matrix.host }}
+          bash tests/run.sh "${{ matrix.host }}"
 
   ci-success:
     needs: 
-      - vps-tests
+      - host-tests
     runs-on: ubuntu-latest
     if: always()
     steps:

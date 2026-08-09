@@ -1,37 +1,60 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 # Change directory to the repository root (two levels up from .github/scripts)
 cd "$(dirname "$0")/../../"
 
 FILTER_NPINS=false
-if [[ "$1" == "--filter-npins" ]]; then
+if [[ "${1:-}" == "--filter-npins" ]]; then
     FILTER_NPINS=true
 fi
 
+# Whitelisted host categories (Single Source of Truth)
+WHITELIST_DIRS=("vps" "virtual-box")
+
 hosts=()
 
-# Iterate over directories in vps/
-for dir in vps/*/; do
-    # 检查基础要求：是否存在 configuration.nix
-    if [ -d "$dir" ] && [ -f "$dir/configuration.nix" ]; then
-        
-        # 如果启用了 npins 过滤，则额外检查 npins 文件
-        if [ "$FILTER_NPINS" = true ]; then
-            if [ ! -f "$dir/npins/default.nix" ] || [ ! -f "$dir/npins/sources.json" ]; then
-                continue
+for category in "${WHITELIST_DIRS[@]}"; do
+    if [ -d "$category" ]; then
+        for dir in "$category"/*/; do
+            [ -d "$dir" ] || continue
+            dir=${dir%/} # strip trailing slash
+            
+            if [ -f "$dir/configuration.nix" ]; then
+                if [ "$FILTER_NPINS" = true ]; then
+                    if [ ! -f "$dir/npins/default.nix" ] || [ ! -f "$dir/npins/sources.json" ]; then
+                        continue
+                    fi
+                fi
+                hosts+=("$dir")
             fi
-        fi
-
-        # Extract the directory name (host name)
-        host=$(basename "$dir")
-        hosts+=("$host")
+        done
     fi
 done
 
-# Output as JSON array using jq
+# Sort host list for deterministic ordering
+if [ ${#hosts[@]} -gt 0 ]; then
+    IFS=$'\n' hosts=($(sort <<<"${hosts[*]}"))
+fi
+
+# Output as JSON array
 if [ ${#hosts[@]} -eq 0 ]; then
     echo "[]"
-else
+elif command -v jq &>/dev/null; then
     printf '%s\n' "${hosts[@]}" | jq -R . | jq -s -c .
+elif command -v python3 &>/dev/null; then
+    python3 -c 'import json, sys; print(json.dumps(sys.argv[1:]))' "${hosts[@]}"
+else
+    res="["
+    first=true
+    for h in "${hosts[@]}"; do
+        if [ "$first" = true ]; then
+            first=false
+        else
+            res+=", "
+        fi
+        res+="\"$h\""
+    done
+    res+="]"
+    echo "$res"
 fi

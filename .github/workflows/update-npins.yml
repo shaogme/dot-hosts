@@ -35,7 +35,7 @@ jobs:
           # Ensure jq is available (it is on ubuntu-latest)
           for host in $(echo "$hosts" | jq -r '.[]'); do
             echo "Updating npins for host: $host"
-            cd "vps/$host"
+            cd "$host"
             # Using nixpkgs from the nix-command to get npins
             nix shell nixpkgs#npins -c npins upgrade
             nix shell nixpkgs#npins -c npins update
