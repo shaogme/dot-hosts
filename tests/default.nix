@@ -1,12 +1,7 @@
 let
-  rootDir = ../.;
-  topEntries = builtins.readDir rootDir;
-  
-  # 白名单分类目录（与 .github/scripts/get-hosts.sh 保持一致）
-  categories = [ "vps" "virtual-box" ];
-
-  # 获取所有包含 configuration.nix 的主机项
-  hostList = builtins.concatLists (map (category:
+  # 动态获取 vps/ 目录下的所有含有 configuration.nix 的主机名称
+  vpsList = builtins.filter (
+    name:
     let
       catPath = rootDir + "/${category}";
       catEntries = builtins.readDir catPath;
@@ -43,12 +38,10 @@ let
       vmTest = import ./vmtest.nix { inherit pkgs configuration; name = item.name; };
     };
 
-  # 构建映射字典，同时支持主机简称 (如 "coding") 和相对路径 (如 "virtual-box/coding")
-  allTests = builtins.listToAttrs (
-    builtins.concatLists (map (item: [
-      { name = item.name; value = makeHostTests item; }
-      { name = item.relPath; value = makeHostTests item; }
-    ]) hostList)
-  );
+  # 映射 VPS 列表到测试集字典
+  allTests = builtins.listToAttrs (map (name: {
+    name = name;
+    value = makeVpsTests name;
+  }) vpsList);
 in
 allTests
