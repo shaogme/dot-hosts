@@ -67,7 +67,7 @@ in
       enable = true;
       device = hostConfig.diskDevice;
       swapSize = 2048;
-      imageBaseSize = 2048; 
+      imageBaseSize = 8192; 
   };
   
   # 性能与内存调优
