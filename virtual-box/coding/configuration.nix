@@ -95,19 +95,13 @@ in
 
   # 开发工具集：Rust, Node.js LTS, C++ 工具链, Python 3 等
   environment.systemPackages = with pkgs; [
-    # 1. 最新 Rust 工具链（包含 Stable 与 Nightly 版本，使用 symlinkJoin 忽略非关键同名脚本冲突）
-    (symlinkJoin {
-      name = "rust-toolchains-combined";
-      paths = [
-        (rust-bin.stable.latest.default.override {
-          extensions = [ "rust-src" "rust-analyzer" ];
-        })
-        (rust-bin.nightly.latest.default.override {
-          extensions = [ "rust-src" ];
-        })
-      ];
-      ignoreCollisions = true;
+    # 1. 最新 Rust 工具链
+    (rust-bin.stable.latest.minimal.override {
+      extensions = [ "rust-src" "rust-analyzer" "rustfmt" "clippy" "rust-docs" ];
     })
+    (lib.lowPrio (rust-bin.nightly.latest.minimal.override {
+      extensions = [ "rust-src" ];
+    }))
     cargo-nextest
     cargo-expand
     cargo-watch
