@@ -164,21 +164,21 @@ in
   # 内核优化: 启用 CachyOS 内核
   exts.kernel.cachyos.enable = true;
 
-  # 网络配置: 静态单接口 IPv4 & IPv6
-  base.hardware.network.single-interface = {
-      enable = true;
+  # 网络配置: 静态 IPv4 & IPv6
+  base.hardware.network = {
+    enable = true;
+    usePredictableInterfaceNames = false;
+    interfaces.eth0 = {
+      dhcp = "no";
       ipv4 = if hostConfig ? ipv4 then {
-          enable = true;
-          inherit (hostConfig.ipv4) address prefixLength gateway;
-      } else {
-          enable = false;
-      };
+        addresses = [ { inherit (hostConfig.ipv4) address prefixLength; } ];
+        inherit (hostConfig.ipv4) gateway;
+      } else { };
       ipv6 = if hostConfig ? ipv6 then {
-          enable = true;
-          inherit (hostConfig.ipv6) address prefixLength gateway;
-      } else {
-          enable = false;
-      };
+        addresses = [ { inherit (hostConfig.ipv6) address prefixLength; } ];
+        inherit (hostConfig.ipv6) gateway;
+      } else { };
+    };
   };
   
   # 认证与安全: Root 用户配置

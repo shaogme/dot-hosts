@@ -7,7 +7,7 @@ pkgs.testers.nixosTest {
     imports = [ configuration ];
 
     # 1. 环境适配：禁用生产环境特有的网络接口配置，改用 VM 默认网络
-    base.hardware.network.single-interface.enable = lib.mkForce false;
+    base.hardware.network.enable = lib.mkForce false;
     
     # 2. 调试增强：允许通过密码登录，方便使用 driver 手动调试
     base.auth.root.mode = lib.mkForce "permit_passwd";

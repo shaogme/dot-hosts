@@ -46,6 +46,23 @@ in
   
   # Hardware 配置
   base.hardware.type = "vps";
+  base.hardware.network = {
+    enable = true;
+    interfaces = {
+      enp0s3 = {
+        dhcp = "yes";
+      };
+      enp0s8 = {
+        dhcp = "no";
+        ipv4.addresses = [
+          {
+            address = "192.168.56.10";
+            prefixLength = 24;
+          }
+        ];
+      };
+    };
+  };
   exts.hardware.disk.btrfs = {
       enable = true;
       device = hostConfig.diskDevice;
