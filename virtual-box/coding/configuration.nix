@@ -4,9 +4,9 @@ let
   # 导入由 npins 管理的依赖源
   sources = import ./npins;
   
-  # 注入当前 pkgs 到基础库和扩展库
-  dot-base = import sources.dot-base { inherit pkgs; };
-  dot-exts = import sources.dot-exts { inherit pkgs; };
+  # 基础库和扩展库
+  dot-base = import sources.dot-base { };
+  dot-exts = import sources.dot-exts { };
 
   # 主机基础配置信息
   hostConfig = {

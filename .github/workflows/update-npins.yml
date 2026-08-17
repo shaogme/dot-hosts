@@ -23,24 +23,8 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
-      - name: Get hosts with npins
-        id: get-hosts
-        run: |
-          hosts=$(bash .github/scripts/get-hosts.sh --filter-npins)
-          echo "hosts=$hosts" >> $GITHUB_OUTPUT
-
-      - name: Update npins for each host
-        run: |
-          hosts='${{ steps.get-hosts.outputs.hosts }}'
-          # Ensure jq is available (it is on ubuntu-latest)
-          for host in $(echo "$hosts" | jq -r '.[]'); do
-            echo "Updating npins for host: $host"
-            cd "$host"
-            # Using nixpkgs from the nix-command to get npins
-            nix shell nixpkgs#npins -c npins upgrade
-            nix shell nixpkgs#npins -c npins update
-            cd - > /dev/null
-          done
+      - name: Update npins for all hosts
+        run: bash scripts/update-npins.sh
 
       - name: Create Pull Request
         id: cpr

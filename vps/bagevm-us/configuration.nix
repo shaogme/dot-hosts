@@ -4,9 +4,9 @@ let
   # 导入由 npins 管理的依赖源
   sources = import ./npins;
   
-  # 注入当前 pkgs 到基础库和扩展库
-  dot-base = import sources.dot-base { inherit pkgs; };
-  dot-exts = import sources.dot-exts { inherit pkgs; };
+  # 基础库和扩展库
+  dot-base = import sources.dot-base { };
+  dot-exts = import sources.dot-exts { };
 
   # 主机基础配置信息
   hostConfig = {
@@ -115,9 +115,9 @@ in
       backend = "podman";
   };
   
-  # 3. Web 应用: X-UI-YG
+  # 3. 代理服务: X-UI-YG
   # cat /var/lib/x-ui-yg/init.log 获取账号密码
-  base.app.web.x-ui-yg = {
+  base.app.proxy.x-ui-yg = {
       enable = true;
       domain = "x-ui.${hostConfig.name}.${hostConfig.domainRoot}";
       backend = "podman";
