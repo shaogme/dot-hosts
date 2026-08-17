@@ -102,7 +102,7 @@ jobs:
           MAX_SIZE=$((1900 * 1024 * 1024))
 
           if [ "$IMAGE_TYPE" = "raw" ]; then
-            SRC_FILE=$(ls result/*.raw 2>/dev/null | head -n 1)
+            SRC_FILE=$(find -L result -name "*.raw" 2>/dev/null | head -n 1)
             if [ -z "$SRC_FILE" ] || [ ! -f "$SRC_FILE" ]; then
               echo "ERROR: Raw image output not found in result directory!"
               exit 1
@@ -123,7 +123,7 @@ jobs:
             fi
 
           elif [ "$IMAGE_TYPE" = "iso" ]; then
-            SRC_FILE=$(find result -name "*.iso" 2>/dev/null | head -n 1)
+            SRC_FILE=$(find -L result -name "*.iso" 2>/dev/null | head -n 1)
             if [ -z "$SRC_FILE" ] || [ ! -f "$SRC_FILE" ]; then
               echo "ERROR: ISO output not found in result directory!"
               exit 1
