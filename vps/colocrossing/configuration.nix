@@ -125,7 +125,7 @@ in
   
   # 4. 代理服务: Hysteria
   # cat /run/hysteria/main/config.yaml 获取 auth 密码
-  base.app.hysteria = {
+  base.app.proxy.hysteria = {
     enable = true;
     backend = "podman";
     instances."main" = {
