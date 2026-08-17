@@ -16,8 +16,8 @@ let
     diskDevice = "/dev/sda";
 
     auth = {
-      rootHash = "$6$wM7R/YUYdtHKYejM$Farw61wodEA1hOi5jfNn2W6Cnil7PhgYF4aHx1rBYkjwZiHG7XoXvq5K2C9I.xflHkvoTPVltt3I3oYtByf6q1";
-      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFNCU2PbTCr6HbrCdthvfbfTeXBePXNei7ER13hwotjr hi@shaog.me" ];
+      rootHash = "$6$aaIgxv.UBXEAr6bt$aoOdJnx6bdKiGxoYVRgW5SaimwLTkC2RayXiEL8NrS3D7p6bwFXLCWE5qS/QTt377mNM0Z1Lh0f7iDuCZrlhp/";
+      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDmWbW6eELDYQl3n+xWlNgKKiVTenc3q1lQKcTVyrl01 ed25519 256-20260817" ];
     };
   };
 in
