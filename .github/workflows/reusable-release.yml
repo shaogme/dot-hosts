@@ -66,35 +66,91 @@ jobs:
           sudo udevadm trigger --name-match=kvm
           ls -la /dev/kvm
 
-      - name: Build Disko Images
+      - name: Build System Image
+        id: build_image
         run: |
-          nix-build "${{ matrix.host }}" \
-            --option substituters "${{ env.CACHIX_SUBSTITUTERS }}" \
-            --option trusted-public-keys "${{ env.CACHIX_PUBLIC_KEYS }}" \
-            -o result
+          HOST_DIR="${{ matrix.host }}"
+          HOST_NAME=$(basename "$HOST_DIR")
+          echo "host_name=${HOST_NAME}" >> $GITHUB_OUTPUT
+
+          if [[ "$HOST_DIR" == vps/* ]]; then
+            echo "Building RAW Disko Image for $HOST_DIR..."
+            nix-build "$HOST_DIR" \
+              --option substituters "${{ env.CACHIX_SUBSTITUTERS }}" \
+              --option trusted-public-keys "${{ env.CACHIX_PUBLIC_KEYS }}" \
+              -o result
+            echo "image_type=raw" >> $GITHUB_OUTPUT
+          elif [[ "$HOST_DIR" == virtual-box/* ]]; then
+            echo "Building Auto-Installer ISO for $HOST_DIR..."
+            nix-build .github/scripts/iso-builder.nix \
+              --arg hostPath "./$HOST_DIR" \
+              --option substituters "${{ env.CACHIX_SUBSTITUTERS }}" \
+              --option trusted-public-keys "${{ env.CACHIX_PUBLIC_KEYS }}" \
+              -o result
+            echo "image_type=iso" >> $GITHUB_OUTPUT
+          else
+            echo "Unknown host directory category: $HOST_DIR"
+            exit 1
+          fi
 
       - name: Prepare and Compress Image
         id: prep
         run: |
-          HOST_NAME=$(basename "${{ matrix.host }}")
+          HOST_NAME="${{ steps.build_image.outputs.host_name }}"
+          IMAGE_TYPE="${{ steps.build_image.outputs.image_type }}"
           echo "host_name=${HOST_NAME}" >> $GITHUB_OUTPUT
-          cp result/*.raw ${HOST_NAME}.raw
-          tar -I "zstd -19 -T0" -cf ${HOST_NAME}.tar.zst ${HOST_NAME}.raw
-          rm -f ${HOST_NAME}.raw
-
-          FILE_SIZE=$(stat -c%s "${HOST_NAME}.tar.zst")
           MAX_SIZE=$((1900 * 1024 * 1024))
-          if [ "$FILE_SIZE" -gt "$MAX_SIZE" ]; then
-            echo "File ${HOST_NAME}.tar.zst size (${FILE_SIZE} bytes) exceeds limit (${MAX_SIZE} bytes). Splitting into 1900M parts..."
-            split -b 1900M -d -a 2 "${HOST_NAME}.tar.zst" "${HOST_NAME}.tar.zst.part"
-            rm -f "${HOST_NAME}.tar.zst"
+
+          if [ "$IMAGE_TYPE" = "raw" ]; then
+            SRC_FILE=$(ls result/*.raw 2>/dev/null | head -n 1)
+            if [ -z "$SRC_FILE" ] || [ ! -f "$SRC_FILE" ]; then
+              echo "ERROR: Raw image output not found in result directory!"
+              exit 1
+            fi
+            TARGET_FILE="${HOST_NAME}.raw"
+            cp "$SRC_FILE" "$TARGET_FILE"
+
+            # raw 压缩成 .tar.zst
+            ARCHIVE_NAME="${HOST_NAME}.tar.zst"
+            tar -I "zstd -19 -T0" -cf "$ARCHIVE_NAME" "$TARGET_FILE"
+            rm -f "$TARGET_FILE"
+
+            FILE_SIZE=$(stat -c%s "$ARCHIVE_NAME")
+            if [ "$FILE_SIZE" -gt "$MAX_SIZE" ]; then
+              echo "File $ARCHIVE_NAME size ($FILE_SIZE bytes) exceeds limit ($MAX_SIZE bytes). Splitting into 1900M parts..."
+              split -b 1900M -d -a 2 "$ARCHIVE_NAME" "${ARCHIVE_NAME}.part"
+              rm -f "$ARCHIVE_NAME"
+            fi
+
+          elif [ "$IMAGE_TYPE" = "iso" ]; then
+            SRC_FILE=$(find result -name "*.iso" 2>/dev/null | head -n 1)
+            if [ -z "$SRC_FILE" ] || [ ! -f "$SRC_FILE" ]; then
+              echo "ERROR: ISO output not found in result directory!"
+              exit 1
+            fi
+            TARGET_FILE="${HOST_NAME}.iso"
+            cp "$SRC_FILE" "$TARGET_FILE"
+
+            # iso 直接压缩成 .7z
+            ARCHIVE_NAME="${HOST_NAME}.7z"
+            7z a -mx=9 "$ARCHIVE_NAME" "$TARGET_FILE"
+
+            FILE_SIZE=$(stat -c%s "$ARCHIVE_NAME")
+            if [ "$FILE_SIZE" -gt "$MAX_SIZE" ]; then
+              echo "File $ARCHIVE_NAME size ($FILE_SIZE bytes) exceeds limit ($MAX_SIZE bytes). Re-compressing into 1900M 7z split volumes..."
+              rm -f "$ARCHIVE_NAME"
+              7z a -v1900m -mx=9 "$ARCHIVE_NAME" "$TARGET_FILE"
+            fi
+            rm -f "$TARGET_FILE"
           fi
 
       - name: Upload Artifact
         uses: actions/upload-artifact@main
         with:
           name: image-${{ steps.prep.outputs.host_name }}
-          path: ${{ steps.prep.outputs.host_name }}.tar.zst*
+          path: |
+            ${{ steps.prep.outputs.host_name }}.tar.zst*
+            ${{ steps.prep.outputs.host_name }}.7z*
           if-no-files-found: error
 
   upload:
@@ -132,18 +188,18 @@ jobs:
             TAG_NAME="nightly"
             RELEASE_NAME="Nightly Release $(date +'%Y%m%d-%H%M%S') (${SHORT_SHA})"
             IS_PRERELEASE="true"
-            TITLE="Nightly System Raw Images Build"
+            TITLE="Nightly System Images (Raw & ISO) Build"
           elif [ "${{ github.ref_name }}" = "pre-release" ]; then
             TAG_NAME="pre-release-latest"
             RELEASE_NAME="Pre-Release $(date +'%Y%m%d-%H%M%S')-${SHORT_SHA}"
             IS_PRERELEASE="true"
-            TITLE="System Raw Images Pre-Release"
+            TITLE="System Images (Raw & ISO) Pre-Release"
           else
             VERSION="${{ inputs.version || github.ref_name }}"
             TAG_NAME="${VERSION}"
             RELEASE_NAME="Release ${VERSION} ($(date +'%Y%m%d'))"
             IS_PRERELEASE="false"
-            TITLE="System Raw Images Release"
+            TITLE="System Images (Raw & ISO) Release"
           fi
 
           echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
@@ -159,7 +215,7 @@ jobs:
           echo "**Date:** \`$(date -u +'%Y-%m-%d %H:%M:%S UTC')\`" >> release_body.md
           echo "" >> release_body.md
           echo "**Artifacts:**" >> release_body.md
-          for f in *.tar.zst*; do
+          for f in *.tar.zst* *.7z*; do
             if [ -f "$f" ]; then
               echo "- \`$f\`" >> release_body.md
             fi
@@ -169,6 +225,12 @@ jobs:
             echo "" >> release_body.md
             echo "> **Note:** Files with \`.part*\` extensions were split because they exceeded GitHub's 2GB file limit." >> release_body.md
             echo "> To restore the original file: \`cat <filename>.tar.zst.part* > <filename>.tar.zst\`" >> release_body.md
+          fi
+
+          if ls *.7z.00* >/dev/null 2>&1; then
+            echo "" >> release_body.md
+            echo "> **Note:** Files with \`.7z.00*\` extensions were split using 7-Zip multi-volume because they exceeded GitHub's 2GB file limit." >> release_body.md
+            echo "> To restore the original file: extract with 7-Zip (\`7z x <filename>.7z.001\`)." >> release_body.md
           fi
 
       - name: Upload Release Assets
@@ -181,5 +243,7 @@ jobs:
           files: |
             *.tar.zst
             *.tar.zst.part*
+            *.7z
+            *.7z.*
           prerelease: ${{ steps.rel_meta.outputs.is_prerelease == 'true' }}
           generate_release_notes: true

@@ -110,8 +110,9 @@ in
     cargo-deny
     cargo-binstall
 
-    # 2. Node.js LTS（使用 nixpkgs 默认 Node.js LTS 别名，无需硬编码大版本）
+    # 2. Node.js LTS & Corepack
     nodejs
+    corepack
 
     # 3. C++ 工具链
     gcc
@@ -122,17 +123,11 @@ in
     pkg-config
     ninja
 
-    # 4. Python 3 环境
-    python3
-    python3Packages.pip
-    python3Packages.setuptools
+    # 4. 包管理与环境工具
+    pixi
+    distrobox
 
-    # 5. AI 工具链
-    codex
-    claude-code
-    opencode
-
-    # 6. 常用开发与实用工具
+    # 5. 常用开发与实用工具
     git
     git-lfs
     gh

@@ -113,7 +113,7 @@ exts.hardware.disk.btrfs = {
 在目标主机或虚拟机上运行以下命令采集并导出硬件清单文件：
 
 ```bash
-nix run github:nixos-facter -- -o facter.json
+sudo nix run --option experimental-features "nix-command flakes" nixpkgs#nixos-facter -- -o facter.json
 ```
 
 将导出的 `facter.json` 放置于主机配置根目录（如 `virtual-box/coding/facter.json`），并在该主机的 `configuration.nix` 中指定引用路径：
