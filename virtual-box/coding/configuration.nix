@@ -13,7 +13,7 @@ let
     name = "coding";
     domainRoot = "shaog.me";
     email = "hi@shaog.me";
-    diskDevice = "/dev/vda";
+    diskDevice = "/dev/sda";
 
     auth = {
       rootHash = "$6$wM7R/YUYdtHKYejM$Farw61wodEA1hOi5jfNn2W6Cnil7PhgYF4aHx1rBYkjwZiHG7XoXvq5K2C9I.xflHkvoTPVltt3I3oYtByf6q1";
