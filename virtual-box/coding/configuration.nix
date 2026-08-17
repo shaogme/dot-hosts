@@ -79,6 +79,9 @@ in
 
   # 容器引擎
   base.container.podman.enable = true;
+
+  # 关闭 VirtualBox Guest 增强驱动（避免高版本内核编译 vboxguest 驱动冲突）
+  virtualisation.virtualbox.guest.enable = false;
   
   # 关闭系统自动更新
   base.update = {
