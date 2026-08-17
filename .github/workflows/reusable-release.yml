@@ -208,6 +208,8 @@ jobs:
           echo "title=${TITLE}" >> $GITHUB_OUTPUT
 
       - name: Generate Release Body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "${{ steps.rel_meta.outputs.title }}" > release_body.md
           echo "" >> release_body.md
@@ -233,6 +235,22 @@ jobs:
             echo "> To restore the original file: extract with 7-Zip (\`7z x <filename>.7z.001\`)." >> release_body.md
           fi
 
+          if [ "${{ inputs.is_nightly }}" = "true" ]; then
+            NOTES=$(gh api "repos/${{ github.repository }}/releases/generate-notes" \
+              -f tag_name="${{ steps.rel_meta.outputs.tag_name }}" \
+              -f target_commitish="${{ inputs.ref || github.sha }}" \
+              --jq .body 2>/dev/null || true)
+            if [ -n "$NOTES" ]; then
+              echo "" >> release_body.md
+              echo "<details>" >> release_body.md
+              echo "<summary>Commits</summary>" >> release_body.md
+              echo "" >> release_body.md
+              echo "$NOTES" >> release_body.md
+              echo "" >> release_body.md
+              echo "</details>" >> release_body.md
+            fi
+          fi
+
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v3
         with:
@@ -246,4 +264,4 @@ jobs:
             *.7z
             *.7z.*
           prerelease: ${{ steps.rel_meta.outputs.is_prerelease == 'true' }}
-          generate_release_notes: true
+          generate_release_notes: ${{ !inputs.is_nightly }}
