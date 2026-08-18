@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "436e762d0a7081b51862112a590db8076e46c7bc",
-      "url": "https://github.com/shaogme/dot-base/archive/436e762d0a7081b51862112a590db8076e46c7bc.tar.gz",
-      "hash": "sha256-zYF64x2DPAmFfGk+Eh91W9DE8k/cJe1fMFlz5yJTnnk="
+      "revision": "29cdfae926e797875f5a546be7d2120bd1169635",
+      "url": "https://github.com/shaogme/dot-base/archive/29cdfae926e797875f5a546be7d2120bd1169635.tar.gz",
+      "hash": "sha256-qjrk8FrFAdDvXa8bgzGbzNwXetIaRbq0oq1gyV2ulGg="
     },
     "dot-exts": {
       "type": "Git",
@@ -30,8 +30,8 @@
       "type": "Channel",
       "name": "nixos-unstable-small",
       "artifact": "nixexprs.tar.xz",
-      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1057377.491ca1adb213/nixexprs.tar.xz",
-      "hash": "sha256-+niHVhaZvXf9QQTO5oV7eFlm/WoLN4JxuNudVn57Y6g="
+      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1057537.ced43465ad23/nixexprs.tar.xz",
+      "hash": "sha256-TKy37VKw2BsTpQhRXzKKKJL5qi8oY4MeqyD6J/Mersg="
     },
     "rust-overlay": {
       "type": "Git",
