@@ -130,11 +130,14 @@ in
       domain = "x-ui.${hostConfig.name}.${hostConfig.domainRoot}";
     };
     backend = "podman";
-    # 防火墙开放端口范围
-    proxyPorts = {
-      start = 16581;
-      end = 16824;
-    };
+    # 防火墙开放端口
+    ports = [
+      54321
+      {
+        start = 16581;
+        end = 16824;
+      }
+    ];
   };
   
   # 4. 代理服务: Hysteria
