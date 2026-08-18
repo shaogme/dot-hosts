@@ -98,29 +98,38 @@ in
 
   # 1. Web 应用: OpenList (原 alist)
   base.app.web.openlist = {
+    enable = true;
+    nginx = {
       enable = true;
       domain = "alist.${hostConfig.name}.${hostConfig.domainRoot}";
-      backend = "podman";
+    };
+    backend = "podman";
   };
 
   # 2. Web 应用: Vaultwarden
   base.app.web.vaultwarden = {
+    enable = true;
+    nginx = {
       enable = true;
       domain = "vw.${hostConfig.name}.${hostConfig.domainRoot}";
-      backend = "podman";
+    };
+    backend = "podman";
   };
   
   # 3. 代理服务: X-UI-YG
   # cat /var/lib/x-ui-yg/init.log 获取账号密码
   base.app.proxy.x-ui-yg = {
+    enable = true;
+    nginx = {
       enable = true;
       domain = "x-ui.${hostConfig.name}.${hostConfig.domainRoot}";
-      backend = "podman";
-      # 防火墙开放端口范围
-      proxyPorts = {
-        start = 16581;
-        end = 16824;
-      };
+    };
+    backend = "podman";
+    # 防火墙开放端口范围
+    proxyPorts = {
+      start = 16581;
+      end = 16824;
+    };
   };
   
   # 4. 代理服务: Hysteria

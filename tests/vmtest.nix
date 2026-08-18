@@ -27,8 +27,8 @@ pkgs.testers.nixosTest {
       serverCfg = nodes.server;
       hostName = serverCfg.networking.hostName;
       hasNginx = serverCfg.services.nginx.enable or false;
-      hasOpenlist = serverCfg.base.app.web.openlist.enable or false;
-      alistDomain = if hasOpenlist then serverCfg.base.app.web.openlist.domain else "";
+      hasOpenlistNginx = (serverCfg.base.app.web.openlist.enable or false) && (serverCfg.base.app.web.openlist.nginx.enable or false);
+      alistDomain = if hasOpenlistNginx then serverCfg.base.app.web.openlist.nginx.domain else "";
     in
     ''
       # 等待系统启动完成
@@ -46,7 +46,7 @@ pkgs.testers.nixosTest {
       # 验证站点配置已加载（虽然返回 502，但说明 Nginx 正在处理该域名）
       # 使用 -k 是因为虽然是 HTTP，但 curl 可能会尝试升级或类似操作，保持简单
       # 我们预期返回 502 Bad Gateway，因为 Podman 没启动，后端不可达
-      if ${if hasOpenlist then "True" else "False"}:
+      if ${if hasOpenlistNginx then "True" else "False"}:
           server.succeed("curl -v -H 'Host: ${alistDomain}' http://127.0.0.1 | grep '502 Bad Gateway'")
       
       # 验证内核调优：检查 BBR 是否启用 (CachyOS 默认启用)
