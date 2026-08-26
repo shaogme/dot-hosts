@@ -22,16 +22,16 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "0f2e84c40af7c6c68e5b87603c34fd8fff1fc0b6",
-      "url": "https://github.com/shaogme/dot-exts/archive/0f2e84c40af7c6c68e5b87603c34fd8fff1fc0b6.tar.gz",
-      "hash": "sha256-LEW5R4a/6SlyJtxk4bg6x/FcB2VrSzuZb3fU+r0NeXE="
+      "revision": "d2ecded80b8226852977a611bb1f8c12034648dc",
+      "url": "https://github.com/shaogme/dot-exts/archive/d2ecded80b8226852977a611bb1f8c12034648dc.tar.gz",
+      "hash": "sha256-tsiRJQzxRNdFs6Ei9AOjo2XXuUq02NqNqmhcorVg9no="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixos-unstable-small",
       "artifact": "nixexprs.tar.xz",
-      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1062056.103cb3a0b62b/nixexprs.tar.xz",
-      "hash": "sha256-d6K3u4og6rXfEWuVACMyJBdXANelak+edQqPWkavXkQ="
+      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1062521.eb0b16891e84/nixexprs.tar.xz",
+      "hash": "sha256-+RQZpROPzC0RbT5n+jNgCiksRZAi+B8GxNAkKzbFlMQ="
     },
     "rust-overlay": {
       "type": "Git",
@@ -42,9 +42,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "132a10336af9ae819bdf640c0dd1c789b12d7107",
-      "url": "https://github.com/oxalica/rust-overlay/archive/132a10336af9ae819bdf640c0dd1c789b12d7107.tar.gz",
-      "hash": "sha256-QdVaU2WSCKsxZ0sBDIRnaaukp6Z5IMUE0gDEDoSRJd0="
+      "revision": "494680f9ffa2b4bf9f2df0f442c7096e44adfa00",
+      "url": "https://github.com/oxalica/rust-overlay/archive/494680f9ffa2b4bf9f2df0f442c7096e44adfa00.tar.gz",
+      "hash": "sha256-ZRYTEvDb8QZLCHRoMyIZle9V3Bvw905m0teeo1RvI7M="
     }
   },
   "version": 8
