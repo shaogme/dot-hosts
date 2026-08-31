@@ -65,7 +65,7 @@ in
   };
   
   # 性能与内存调优
-  base.performance.tuning.enable = true;
+  base.performance.tuning.profile = "vps";
   base.memory.mode = "aggressive";
   
   # DNS 服务
