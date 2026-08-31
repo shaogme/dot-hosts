@@ -7,6 +7,7 @@
 ## 核心特性与架构
 
 本配置库深度集成并引入了两个底座组件，专为 VPS 和个人服务器提供极致调优和运维托管：
+
 * **[dot-base](https://github.com/shaogme/dot-base)**: 提供极简开箱即用的系统基础（SmartDNS、自动同步、自动更新、容器服务底座等）。
 * **[dot-exts](https://github.com/shaogme/dot-exts)**: 提供内核级优化（CachyOS）、自动化磁盘分区（Disko Btrfs）等进阶服务。
 
@@ -19,7 +20,9 @@
 当您需要为新 VPS 铺设配置时，请重点关注对应主机目录下 `configuration.nix` 中的 `hostConfig` 局部定义和相关选项：
 
 ### 1. 基础信息
+
 在 `configuration.nix` 的 `hostConfig` 中填入名称、域名及证书邮箱：
+
 ```nix
 hostConfig = {
   name = "bagevm-jp";       # 必须与当前目录名称保持严格一致
@@ -47,11 +50,13 @@ hostConfig = {
 > [!WARNING]
 > **请务必不要直接使用默认的`rootHash`**！
 > 为了系统安全，请务必在本地运行以下命令生成您独有的 SHA-512 散列密码并填入 `rootHash`：
+>
 > ```bash
 > nix run nixpkgs#mkpasswd -- -m sha-512
 > ```
 
 #### 认证模式设置
+
 您可以通过修改 `base.auth.root.mode`（默认值为 `"default"`）来调整 root 的登录安全级别：
 
 | 模式 | SSH 密码登录 | SSH 密钥登录 | 适用场景 |
@@ -64,10 +69,13 @@ hostConfig = {
 ### 3. 静态网络配置 (IPv4 / IPv6)
 
 如果您的 VPS 运行在需要静态 IP 的网络环境中，请先在远程主机上执行网络拓扑分析脚本，获取网卡配置：
+
 ```bash
 curl -sSL https://github.com/shaogme/net-config/releases/latest/download/net-config-linux-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/;s/arm64/arm64/') -o net-config && chmod +x net-config && ./net-config
 ```
+
 参考其控制台输出的 `Address`（公网 IP）、`Gateway`（网关）和 `Subnet Mask (Prefix)`（掩码长度），在 `hostConfig` 中填写：
+
 ```nix
 ipv4 = {
   address = "209.33.172.145";
@@ -105,9 +113,11 @@ exts.hardware.disk.btrfs = {
 
 > [!NOTE]
 > 如果目标主机运行的是非 NixOS 系统（如 Ubuntu/Debian/CentOS 等），且尚未安装 Nix 包管理器，可以运行官方推荐的脚本一键安装 Nix（Multi-user 模式）：
+>
 > ```bash
 > curl --proto '=https' --tlsv1.2 -sSf -L https://nixos.org/nix/install | sh -s -- --daemon
 > ```
+>
 > 安装完成后执行 `source /etc/profile.d/nix.sh`（或重新登录终端）即可直接使用 `nix` 命令。
 
 在目标主机或虚拟机上运行以下命令采集并导出硬件清单文件：
@@ -129,6 +139,7 @@ hardware.facter.reportPath = ./facter.json;
 根据项目开发规范，本仓库外部依赖（非 Flake 项目）统一由 **npins** 托管。禁止手动编写 `fetchFromGitHub`、`fetchTarball` 等，以确保哈希的版本可锁和绝对可追溯。
 
 ### 更新第三方依赖源
+
 当需要将底层的 `dot-base` 或 `dot-exts` 库升级至最新提交时，请按如下流程操作：
 
 ```bash
@@ -141,6 +152,7 @@ npins update
 # 3. 运行静态解析测试，验证配置是否有语法错误
 nix-instantiate --parse configuration.nix > /dev/null
 ```
+
 > [!TIP]
 > 更多关于 npins 的规范，请参阅 [AGENTS.md](AGENTS.md) 依赖管理指南。
 
@@ -152,12 +164,15 @@ nix-instantiate --parse configuration.nix > /dev/null
 **工作原理**：GitHub Actions 工作流 `.github/workflows/release.yml` 会自动构建系统镜像包并发布到 Releases 中。VPS 只需要一键下载重装脚本并指向该镜像包链接即可实现完全覆盖安装。
 
 ### 1. 获取镜像直链
+
 镜像在构建完成后的最新直链格式为：
+
 ```text
 https://github.com/<您的GitHub用户名>/dot-hosts/releases/latest/download/<主机名>.tar.zst
 ```
 
 ### 2. 在目标 VPS 执行一键 DD 重装
+
 通过 SSH 登录现有 VPS（可以是任意主流 Linux 系统），执行以下指令：
 
 ```bash
@@ -172,20 +187,24 @@ bash reinstall.sh dd --img "$IMAGE_URL"
 ```
 
 > [!CAUTION]
-> - 执行 DD 覆盖将会**完全抹去目标磁盘中的所有现有数据**！在操作前请确认您的重要资料已妥善备份。
-> - 系统重装完成后会自动重启。重启后，原有系统的密码将失效，您需使用配置中指定的 SSH 私钥登录。
+>
+> * 执行 DD 覆盖将会**完全抹去目标磁盘中的所有现有数据**！在操作前请确认您的重要资料已妥善备份。
+> * 系统重装完成后会自动重启。重启后，原有系统的密码将失效，您需使用配置中指定的 SSH 私钥登录。
 
 ---
 
 ## 系统维护与更新机制
 
 ### 自动同步与定时升级
+
 一旦在配置中启用了 `base.update` 配置（如 `bagevm-jp` 示例所示），系统将开启完全托管免运维升级：
+
 * **Git 配置定时拉取**：定时器会以每小时一轮（`interval = "hourly"`）的频次调用 `sync-config` 服务，将您在 GitHub `dot-hosts` 仓库的最新提交安全拉取并硬同步（`destructive = true`）至本地的 `/etc/nixos` 路径。
 * **定时静默重构**：每天凌晨 `04:00` 伴随着最多 `1` 小时的消峰随机延迟，系统会自动执行 `nixos-rebuild`。若遇到内核更新且设置了 `allowReboot = true`，系统会在无活跃连接时安全自动重启。
 * **定期垃圾清理 (GC)**：每周定时执行 Nix 存储清理，自动删除超过 `7` 天的旧版系统代数，且默认开启 `auto-optimise-store` 以合并重合的文件节点，保证小容量 VPS 不会被撑爆。
 
 ### 手动紧急更新
+
 若您向仓库提交了新规则并希望其即刻在 VPS 上生效，无需等待后台定时触发，可直接连接至 VPS 运行以下命令：
 
 ```bash
@@ -205,6 +224,7 @@ sudo nixos-rebuild switch \
 如果您需要运行一个标准 Nginx 服务且不想修改主机的 `configuration.nix` 配置文件，可以利用我们启用的独立配置文件机制。系统会自动扫描并加载 `/etc/nixos-extra/services/` 目录下的所有以 `.nix` 结尾的配置文件。通过编写独立的 Nix 配置文件，即可在其中**同时**声明 ACME 证书与 Nginx 虚拟主机，系统会自动处理 SSL 证书签发、80 到 443 强制跳转以及服务反向代理。
 
 ### 1. 编写独立 Nix 配置文件
+
 直接在 VPS 上的 `/etc/nixos-extra/services/` 目录下创建一个新的 `.nix` 文件（例如 `/etc/nixos-extra/services/my-service.nix`）：
 
 ```nix
@@ -232,6 +252,7 @@ sudo nixos-rebuild switch \
 ```
 
 ### 2. 应用并生效配置
+
 在 VPS 上执行系统配置重构，NixOS 会自动识别新文件，完成 ACME 域名验证并签发 SSL 证书，随后自动载入并重载 Nginx 服务：
 
 ```bash
