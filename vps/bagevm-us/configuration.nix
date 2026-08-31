@@ -17,9 +17,9 @@ let
 
     auth = {
       # Hash 密码
-      rootHash = "$6$XWNH63WaC867Ahyx$0EqTPRa9MJtY760kLYhL30VXUinaTlpSYoe0OsJixKwnFq7C9PjBJ8KKWky09vSNc5gLcQQ1iJdIJUmyGYs0y/";
+      rootHash = "$6$hlTx7RM6l5YerUNP$cwOz00.dchTR72BYDP6Wo.08zEYUVKlKEdj2fo4nthnk5ksUY3NIUw4J/SMIeIb.PVucTHSLWybiMwz31Rwla/";
       # SSH 公钥
-      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKylBbHVCLpH3z2clvyWRWs0km2eXndeKfef1wtqZ+k6 ed25519 256-20251223 hi@shaog.me" ];
+      sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINE+NrfPFGYwJp6RF1oiJrJuRcLt0WKoBRGht2FkfsLo ed25519 256-20260831 hi@shaog.me" ];
     };
 
     ipv4 = {
