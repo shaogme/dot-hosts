@@ -68,6 +68,15 @@ in
       device = hostConfig.diskDevice;
       swapSize = 2048;
       imageBaseSize = 8192; 
+      partitions.root = {
+        size = "100%";
+        subvolumes = {
+          "@" = { mountpoint = "/"; };
+          "@home" = { mountpoint = "/home"; };
+          "@nix" = { mountpoint = "/nix"; };
+          "@log" = { mountpoint = "/var/log"; neededForBoot = true; };
+        };
+      };
   };
   
   # 性能与内存调优
