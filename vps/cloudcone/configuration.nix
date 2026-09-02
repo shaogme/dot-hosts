@@ -88,9 +88,11 @@ in
       enable = true;
       upgrade = {
           enable = true;
-          timer.enable = true;
+          timer = {
+            enable = true;
+            allowReboot = true;
+          };
           type = "legacy";
-          allowReboot = true;
       };
       sync = {
           enable = true;
