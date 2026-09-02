@@ -203,18 +203,21 @@ bash reinstall.sh dd --img "$IMAGE_URL"
 * **定时静默重构**：每天凌晨 `04:00` 伴随着最多 `1` 小时的消峰随机延迟，系统会自动执行 `nixos-rebuild`。若遇到内核更新且设置了 `allowReboot = true`，系统会在无活跃连接时安全自动重启。
 * **定期垃圾清理 (GC)**：每周定时执行 Nix 存储清理，自动删除超过 `7` 天的旧版系统代数，且默认开启 `auto-optimise-store` 以合并重合的文件节点，保证小容量 VPS 不会被撑爆。
 
-### 手动紧急更新
+### 手动即时更新 (`dot-update`)
 
-若您向仓库提交了新规则并希望其即刻在 VPS 上生效，无需等待后台定时触发，可直接连接至 VPS 运行以下命令：
+若您向仓库提交了新配置并希望其即刻在 VPS 上生效，无需等待后台定时触发，可直接连接至 VPS 运行内置的 `dot-update` 维护工具：
 
 ```bash
-# 1. 强制手动同步 Git 配置
-sudo systemctl start sync-config
+# 1. 自动拉取远程 Git 最新提交并执行系统 Rebuild
+dot-update --pull
+# 或使用简写
+dot-update -p
 
-# 2. 手动执行 NixOS 配置重构 (使用当前主机绑定的 npins 锁定版本)
-sudo nixos-rebuild switch \
-  -I nixos-config=/etc/nixos/vps/$(hostname)/configuration.nix \
-  -I nixpkgs=$(nix-instantiate --eval -E "toString (import /etc/nixos/vps/$(hostname)/npins).nixpkgs" | tr -d '"')
+# 2. 仅构建当前本地修改（不拉取远程）
+dot-update
+
+# 3. 委托给后台 systemd 服务执行并实时追踪日志
+dot-update --service
 ```
 
 ---

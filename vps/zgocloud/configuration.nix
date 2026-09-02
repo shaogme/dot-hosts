@@ -83,11 +83,13 @@ in
       enable = true;
       upgrade = {
           enable = true;
+          timer.enable = true;
           type = "legacy";
           allowReboot = true;
       };
       sync = {
           enable = true;
+          timer.enable = true;
           url = "https://github.com/shaogme/dot-hosts";
       };
       # 指定追踪 dot-hosts 仓库中的子路径
