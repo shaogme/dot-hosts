@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "496e505091d25bf252d38a9679fcbc5b3867d2fe",
-      "url": "https://github.com/shaogme/dot-base/archive/496e505091d25bf252d38a9679fcbc5b3867d2fe.tar.gz",
-      "hash": "sha256-YKgTBj//vHI+OgHFp1czwyOI6ZmkiwRZ7jnL2EXo7P4="
+      "revision": "57fa9dd8e0f420955f2e43908b81da3e5b541991",
+      "url": "https://github.com/shaogme/dot-base/archive/57fa9dd8e0f420955f2e43908b81da3e5b541991.tar.gz",
+      "hash": "sha256-yLAR6yli5WQIuHt+YaQu3EjdPqBSPGrr8VAAKFGCdM8="
     },
     "dot-exts": {
       "type": "Git",
@@ -22,16 +22,16 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "5fa444912e58e5c9350bf1bf67a59d6735d03abf",
-      "url": "https://github.com/shaogme/dot-exts/archive/5fa444912e58e5c9350bf1bf67a59d6735d03abf.tar.gz",
-      "hash": "sha256-M6RjenZsWdTK8gsgefaZBsrLXuF39RWvTMggv7Qi8sY="
+      "revision": "ab97df46b06e673c7f21b7545012011e5835f15c",
+      "url": "https://github.com/shaogme/dot-exts/archive/ab97df46b06e673c7f21b7545012011e5835f15c.tar.gz",
+      "hash": "sha256-5I0EvO6TLoBv9gY7/CREinJZEPi6BNIk/I7ajYuDzzY="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixos-unstable-small",
       "artifact": "nixexprs.tar.xz",
-      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1068195.8f3889588add/nixexprs.tar.xz",
-      "hash": "sha256-565UryCScUTSYIeg9UElSTg8fC84fNkSwneTyI/j1uo="
+      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.11pre1068398.de0ba0a81b0f/nixexprs.tar.xz",
+      "hash": "sha256-WIxMXidJGRhqyL6abeRrtbzjcwBn3DajWHiWLDvqEpc="
     },
     "rust-overlay": {
       "type": "Git",
@@ -42,9 +42,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "c361047d3a538f547f1617bb6b410411929ac9cc",
-      "url": "https://github.com/oxalica/rust-overlay/archive/c361047d3a538f547f1617bb6b410411929ac9cc.tar.gz",
-      "hash": "sha256-Vh+BeLWfbTT9AecazIsQ/Tkg/RzJeX3lEduANf256WA="
+      "revision": "4748ec2f5ed4a881474ed4c98aa71a5308cdac8d",
+      "url": "https://github.com/oxalica/rust-overlay/archive/4748ec2f5ed4a881474ed4c98aa71a5308cdac8d.tar.gz",
+      "hash": "sha256-pcqbpV4ZI79al6KAlr+WJjaEo/PYfgctRlG43D5BSJM="
     }
   },
   "version": 8
