@@ -18,7 +18,15 @@ pkgs.testers.nixosTest {
     base.testMode = true;
     exts.testMode = true;
 
-    # 4. 性能优化：在虚拟机中禁用耗时的磁盘操作（可选）
+    # 4. 存储适配：为 VM 提供 swapfile 作为 zswap 运行的后端存储（因为 testMode 禁用了生产环境 Disko 分区）
+    swapDevices = lib.mkForce [
+      {
+        device = "/swapfile";
+        size = 256;
+      }
+    ];
+
+    # 5. 性能优化：在虚拟机中禁用耗时的磁盘操作（可选）
     # exts.hardware.disk.btrfs.enable = lib.mkForce false;
   };
 
@@ -52,6 +60,12 @@ pkgs.testers.nixosTest {
       # 验证内核调优：检查 BBR 是否启用 (CachyOS 默认启用)
       sysctl_bbr = server.succeed("sysctl net.ipv4.tcp_congestion_control")
       assert "bbr" in sysctl_bbr
+
+      # 验证内存调优：检查 zswap 是否按预期启用
+      zswap_enabled = server.succeed("cat /sys/module/zswap/parameters/enabled").strip()
+      assert zswap_enabled == "Y", f"预期 zswap 处于启用状态 (Y)，实际为 {zswap_enabled}"
+      zswap_compressor = server.succeed("cat /sys/module/zswap/parameters/compressor").strip()
+      assert "zstd" in zswap_compressor, f"预期 zswap 压缩器为 zstd，实际为 {zswap_compressor}"
       
       # 验证主机名
       hostname = server.succeed("hostname").strip()

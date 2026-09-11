@@ -75,7 +75,10 @@ in
   
   # 性能与内存调优
   base.performance.tuning.profile = "vps";
-  base.memory.mode = "aggressive";
+  base.memory = {
+    type = "zswap";
+    mode = "aggressive";
+  };
   
   # DNS 服务
   base.dns.smartdns.mode = "oversea";
@@ -229,6 +232,10 @@ in
     {
       assertion = config.exts.kernel.cachyos.enable == true;
       message = "内核配置错误：CachyOS 内核未启用";
+    }
+    {
+      assertion = config.boot.zswap.enable == true && !config.zramSwap.enable;
+      message = "内存配置错误：拥有物理 Swap 时应启用 zswap 且禁用 zram";
     }
   ];
 }
