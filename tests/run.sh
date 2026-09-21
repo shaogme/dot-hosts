@@ -9,11 +9,11 @@ CACHE_TrustedPublicKeys="cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGsp
 TESTS_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_DIR="$(cd "$TESTS_DIR/.." && pwd)"
 
-# 若本地存在 dot-base / dot-exts 源码目录，自动覆盖 npins 避免开发测试时指向远端旧 commit
-if [ -d "$REPO_DIR/dot-base" ] && [ -z "${NPINS_OVERRIDE_dot_base:-}" ]; then
+# 若本地存在有效的 dot-base / dot-exts 源码目录，自动覆盖 npins 避免开发测试时指向远端旧 commit
+if [ -f "$REPO_DIR/dot-base/default.nix" ] && [ -z "${NPINS_OVERRIDE_dot_base:-}" ]; then
   export NPINS_OVERRIDE_dot_base="$REPO_DIR/dot-base"
 fi
-if [ -d "$REPO_DIR/dot-exts" ] && [ -z "${NPINS_OVERRIDE_dot_exts:-}" ]; then
+if [ -f "$REPO_DIR/dot-exts/default.nix" ] && [ -z "${NPINS_OVERRIDE_dot_exts:-}" ]; then
   export NPINS_OVERRIDE_dot_exts="$REPO_DIR/dot-exts"
 fi
 

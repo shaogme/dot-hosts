@@ -19,7 +19,7 @@ pkgs.testers.nixosTest {
     exts.testMode = true;
 
     # 4. 存储适配：为 VM 提供 swapfile 作为 zswap 运行的后端存储（因为 testMode 禁用了生产环境 Disko 分区）
-    swapDevices = lib.mkForce [
+    swapDevices = lib.mkVMOverride [
       {
         device = "/swapfile";
         size = 256;
