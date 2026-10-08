@@ -61,7 +61,7 @@ in
       device = hostConfig.diskDevice;
       swapSize = 2048;
       # 显式指定基础镜像大小（MB），用于 Disko 构建参考
-      imageBaseSize = 3072; 
+      imageBaseSize = 4096; 
       partitions.root = {
         size = "100%";
         subvolumes = {
