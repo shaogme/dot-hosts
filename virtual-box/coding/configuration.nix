@@ -34,9 +34,6 @@ in
   # 通用系统配置 (Base)
   # ==========================================
   system.stateVersion = "25.11"; 
-  
-  # 启用 Lix 代替默认的 CppNix
-  nix.package = pkgs.lixPackageSets.git.lix;
 
   # 应用 rust-overlay
   nixpkgs.overlays = [ (import sources.rust-overlay) ];
