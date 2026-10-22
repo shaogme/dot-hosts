@@ -10,7 +10,7 @@ if [[ "${1:-}" == "--filter-npins" ]]; then
 fi
 
 # Whitelisted host categories (Single Source of Truth)
-WHITELIST_DIRS=("vps" "virtual-box")
+WHITELIST_DIRS=("vps")
 
 hosts=()
 

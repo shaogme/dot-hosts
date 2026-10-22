@@ -38,7 +38,7 @@ in
   imports = [
     # 1. 引入模块库
     dot-base.nixosModules.default
-    dot-exts.nixosModules.kernel.cachyos
+    dot-base.nixosModules.kernel-xanmod
     dot-exts.nixosModules.hardware.disk.btrfs
     ../common.nix
   ];
@@ -46,7 +46,7 @@ in
   # ==========================================
   # 通用系统配置 (Base)
   # ==========================================
-  system.stateVersion = "25.11"; 
+  system.stateVersion = "25.11";
   
   # 基础功能启用
   base.enable = true;
@@ -185,8 +185,6 @@ in
     };
   };
 
-  # 内核优化: 启用 CachyOS 内核
-  exts.kernel.cachyos.enable = true;
 
   # 网络配置: 静态 IPv4 & IPv6
   base.hardware.network = {
@@ -225,10 +223,6 @@ in
     {
       assertion = config.base.app.web.nginx.email == hostConfig.email;
       message = "ACME 邮箱配置错误，当前为 ${config.base.app.web.nginx.email}";
-    }
-    {
-      assertion = config.exts.kernel.cachyos.enable == true;
-      message = "内核配置错误：CachyOS 内核未启用";
     }
     {
       assertion = config.boot.zswap.enable == true && !config.zramSwap.enable;

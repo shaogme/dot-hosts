@@ -126,7 +126,7 @@ exts.hardware.disk.btrfs = {
 sudo nix run --option experimental-features "nix-command flakes" nixpkgs#nixos-facter -- -o facter.json
 ```
 
-将导出的 `facter.json` 放置于主机配置根目录（如 `virtual-box/coding/facter.json`），并在该主机的 `configuration.nix` 中指定引用路径：
+将导出的 `facter.json` 放置于主机配置根目录，并在该主机的 `configuration.nix` 中指定引用路径：
 
 ```nix
 hardware.facter.reportPath = ./facter.json;

@@ -20,8 +20,8 @@ on:
         description: 'Git commit SHA or reference to build'
 
 env:
-  CACHIX_SUBSTITUTERS: https://cache.nixos.org https://attic.xuyh0120.win/lantian
-  CACHIX_PUBLIC_KEYS: cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=
+  CACHIX_SUBSTITUTERS: https://cache.nixos.org
+  CACHIX_PUBLIC_KEYS: cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
 
 jobs:
   setup-hosts:
@@ -80,14 +80,6 @@ jobs:
               --option trusted-public-keys "${{ env.CACHIX_PUBLIC_KEYS }}" \
               -o result
             echo "image_type=raw" >> $GITHUB_OUTPUT
-          elif [[ "$HOST_DIR" == virtual-box/* ]]; then
-            echo "Building Auto-Installer ISO for $HOST_DIR..."
-            nix-build .github/scripts/iso-builder.nix \
-              --arg hostPath "./$HOST_DIR" \
-              --option substituters "${{ env.CACHIX_SUBSTITUTERS }}" \
-              --option trusted-public-keys "${{ env.CACHIX_PUBLIC_KEYS }}" \
-              -o result
-            echo "image_type=iso" >> $GITHUB_OUTPUT
           else
             echo "Unknown host directory category: $HOST_DIR"
             exit 1
@@ -122,24 +114,6 @@ jobs:
               rm -f "$ARCHIVE_NAME"
             fi
 
-          elif [ "$IMAGE_TYPE" = "iso" ]; then
-            SRC_FILE=$(find -L result -name "*.iso" 2>/dev/null | head -n 1)
-            if [ -z "$SRC_FILE" ] || [ ! -f "$SRC_FILE" ]; then
-              echo "ERROR: ISO output not found in result directory!"
-              exit 1
-            fi
-            TARGET_FILE="${HOST_NAME}.iso"
-            cp "$SRC_FILE" "$TARGET_FILE"
-
-            # iso 一步到位使用 1900M 分卷压缩为 .7z
-            ARCHIVE_NAME="${HOST_NAME}.7z"
-            7z a -v1900m -mx=6 "$ARCHIVE_NAME" "$TARGET_FILE"
-            rm -f "$TARGET_FILE"
-
-            # 若总大小未超出 1900M（仅生成 .7z.001），重命名为单个标准 .7z 文件
-            if [ -f "${ARCHIVE_NAME}.001" ] && [ ! -f "${ARCHIVE_NAME}.002" ]; then
-              mv "${ARCHIVE_NAME}.001" "$ARCHIVE_NAME"
-            fi
           fi
 
       - name: Upload Artifact
