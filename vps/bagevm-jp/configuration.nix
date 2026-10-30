@@ -88,6 +88,7 @@ in
       enable = true;
       upgrade = {
           enable = true;
+          nixpkgsPath = toString sources.nixpkgs;
           timer = {
             enable = true;
             allowReboot = true;
